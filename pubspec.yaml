@@ -1,15 +1,16 @@
 name: flutter_hybrid_template
-description: A hybrid Flutter app.
+description: A hybrid Flutter app for Mr Ahmed Gamal.
 publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=3.0.0 <4.0.0" # حدثنا المحرك هنا عشان يدعم أحدث المكتبات
 
 dependencies:
   flutter:
     sdk: flutter
-  flutter_inappwebview: ^5.3.2
+  flutter_inappwebview: ^6.0.0 # نسخة أحدث وأسرع
+  onesignal_flutter: ^5.2.2    # مكتبة الإشعارات الفورية
 
 dev_dependencies:
   flutter_test:
@@ -17,4 +18,3 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-
