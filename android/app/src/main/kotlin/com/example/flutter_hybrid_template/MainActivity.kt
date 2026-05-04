@@ -12,28 +12,30 @@ class MainActivity: FlutterActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 1. قفل التصوير والسكرين شوت (الأساس)
+        // منع تصوير الشاشة والسكرين شوت
         window.setFlags(
             WindowManager.LayoutParams.FLAG_SECURE,
             WindowManager.LayoutParams.FLAG_SECURE
         )
 
-        // 2. فحص الـ ADB (لو مفعل يقفل)
-        if (isAdbEnabled()) { exitProcess(0) }
-
-        // 3. فحص الـ Root (لو الجهاز متهكر يقفل)
-        if (isDeviceRooted()) { exitProcess(0) }
-
-        // 4. فحص المحاكي (لو شغال على كمبيوتر يقفل)
-        if (isEmulator()) { exitProcess(0) }
+        // إغلاق التطبيق لو الـ ADB أو الـ Root أو المحاكي شغالين
+        if (isAdbEnabled() || isDeviceRooted() || isEmulator()) {
+            exitProcess(0)
+        }
     }
 
-    // دالة فحص الـ ADB
-    private fun isAdbEnabled(): Boolean {
-        return Settings.Global.getInt(contentResolver, Settings.Global.ADB_ENABLED, 0) == 1
+    private fun isAdbEnabled(): Boolean = 
+        Settings.Global.getInt(contentResolver, Settings.Global.ADB_ENABLED, 0) == 1
+
+    private fun isDeviceRooted(): Boolean {
+        val paths = arrayOf("/system/app/Superuser.apk", "/sbin/su", "/system/bin/su", "/system/xbin/su", "/data/local/xbin/su", "/data/local/bin/su")
+        return paths.any { File(it).exists() }
     }
 
-    // دالة فحص الـ Root (بتبحث عن ملفات النظام المخفية)
+    private fun isEmulator(): Boolean {
+        return (Build.BRAND.startsWith("generic") || Build.DEVICE.startsWith("generic") || Build.MODEL.contains("google_sdk") || Build.MODEL.contains("Emulator") || Build.PRODUCT.contains("sdk"))
+    }
+}
     private fun isDeviceRooted(): Boolean {
         val paths = arrayOf(
             "/system/app/Superuser.apk", "/sbin/su", "/system/bin/su",
