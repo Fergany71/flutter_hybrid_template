@@ -2,13 +2,13 @@
     package="com.example.flutter_hybrid_template">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     
     <application
         android:label="Mr Ahmed Gamal"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
-        
-        <activity
+        android:icon="@mipmap/ic_launcher"
+        android:hardwareAccelerated="true"> <activity
             android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
@@ -33,5 +33,4 @@
             android:value="2" />
     </application>
 </manifest>
-    </application>
 </manifest>
