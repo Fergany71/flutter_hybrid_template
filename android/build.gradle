@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.9.22' // نسخة مستقرة جداً لـ Java 17
+    ext.kotlin_version = '1.9.10' // نسخة مستقرة جداً ومتوافقة مع Java 17
     repositories {
         google()
         mavenCentral()
