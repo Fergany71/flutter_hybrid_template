@@ -24,6 +24,11 @@ jobs:
     - name: Install Dependencies
       run: flutter pub get
 
+    # --- الخطوة السحرية لتوليد الأيقونات ---
+    - name: Generate App Icons
+      run: flutter pub run flutter_launcher_icons
+
+    # بناء الـ APK النسخة النهائية
     - name: Build APK
       run: flutter build apk --release
 
