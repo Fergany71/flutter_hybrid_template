@@ -56,13 +56,16 @@ class _MyWebViewState extends State<MyWebView> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
-        child: WillPopScope(
-          onWillPop: () async {
+        // تحديث لدعم الإصدارات الحديثة من فلاتر بدل WillPopScope
+        child: PopScope(
+          canPop: false,
+          onPopInvoked: (didPop) async {
+            if (didPop) return;
             if (webViewController != null && await webViewController!.canGoBack()) {
               webViewController!.goBack();
-              return false;
+            } else {
+              SystemNavigator.pop(); // الخروج من التطبيق لو مفيش صفحة نرجع ليها
             }
-            return true;
           },
           child: Stack(
             children: [
@@ -72,7 +75,6 @@ class _MyWebViewState extends State<MyWebView> {
                 ),
                 initialSettings: InAppWebViewSettings(
                   javaScriptEnabled: true,
-                  useHybridComposition: true,
                   userAgent: "Omar_Super_App_2026",
                   cacheMode: CacheMode.LOAD_DEFAULT,
                   supportZoom: false,
@@ -86,6 +88,7 @@ class _MyWebViewState extends State<MyWebView> {
                   disableHorizontalScroll: true,
                   saveFormData: false,
                   transparentBackground: true,
+                  // تم حذف useHybridComposition من هنا
                 ),
                 onWebViewCreated: (controller) {
                   webViewController = controller;
