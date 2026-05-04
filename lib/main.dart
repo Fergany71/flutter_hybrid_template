@@ -56,7 +56,6 @@ class _MyWebViewState extends State<MyWebView> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
-        // تحديث لدعم الإصدارات الحديثة من فلاتر بدل WillPopScope
         child: PopScope(
           canPop: false,
           onPopInvoked: (didPop) async {
@@ -64,7 +63,7 @@ class _MyWebViewState extends State<MyWebView> {
             if (webViewController != null && await webViewController!.canGoBack()) {
               webViewController!.goBack();
             } else {
-              SystemNavigator.pop(); // الخروج من التطبيق لو مفيش صفحة نرجع ليها
+              SystemNavigator.pop();
             }
           },
           child: Stack(
@@ -82,13 +81,11 @@ class _MyWebViewState extends State<MyWebView> {
                   disableContextMenu: true,
                   overScrollMode: OverScrollMode.NEVER,
                   disallowOverScroll: true,
-                  selectionHighlightColor: Colors.transparent,
                   builtInZoomControls: false,
                   displayZoomControls: false,
                   disableHorizontalScroll: true,
                   saveFormData: false,
                   transparentBackground: true,
-                  // تم حذف useHybridComposition من هنا
                 ),
                 onWebViewCreated: (controller) {
                   webViewController = controller;
