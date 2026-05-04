@@ -52,4 +52,15 @@ android {
 
 dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
+    
+    // إجبار المشروع على استخدام إصدارات مستقرة ومتوافقة مع Gradle 8.3
+    implementation("androidx.browser:browser") {
+        version { strictly("1.8.0") }
+    }
+    implementation("androidx.core:core") {
+        version { strictly("1.13.1") }
+    }
+    implementation("androidx.core:core-ktx") {
+        version { strictly("1.13.1") }
+    }
 }
