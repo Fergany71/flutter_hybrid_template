@@ -10,11 +10,12 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    # تحديث الجافا لنسخة 17 لضمان التوافق مع API 36 وأندرويد 16
     - name: Setup Java
       uses: actions/setup-java@v4
       with:
         distribution: 'zulu'
-        java-version: '11'
+        java-version: '17'
 
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
@@ -22,18 +23,23 @@ jobs:
         channel: 'stable'
 
     - name: Install Dependencies
+        # تحميل المكتبات (OneSignal, WebView, Icons)
       run: flutter pub get
 
-    # --- الخطوة السحرية لتوليد الأيقونات ---
+    # توليد الأيقونات أوتوماتيك من مجلد assets
     - name: Generate App Icons
       run: flutter pub run flutter_launcher_icons
 
-    # بناء الـ APK النسخة النهائية
-    - name: Build APK
-      run: flutter build apk --release
+    # بناء الـ APK مع التشفير (Obfuscation) لإخفاء روابط الموقع
+    - name: Build APK (Obfuscated & Secure)
+      run: flutter build apk --release --obfuscate --split-debug-info=build/app/outputs/symbols
 
+    # رفع الملف النهائي كـ Artifact
     - name: Upload APK
       uses: actions/upload-artifact@v4
+      with:
+        name: Mr_Ahmed_Gamal_APK
+        path: build/app/outputs/flutter-apk/app-release.apk
       with:
         name: Mr_Ahmed_Gamal_APK
         path: build/app/outputs/flutter-apk/app-release.apk
