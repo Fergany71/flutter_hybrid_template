@@ -1,16 +1,17 @@
 name: flutter_hybrid_template
-description: A hybrid Flutter app for Mr Ahmed Gamal.
+description: A hybrid Flutter app for Mr Ahmed Gamal platform.
 publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: ">=3.0.0 <4.0.0" # حدثنا المحرك هنا عشان يدعم أحدث المكتبات
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  flutter_inappwebview: ^6.0.0 # نسخة أحدث وأسرع
-  onesignal_flutter: ^5.2.2    # مكتبة الإشعارات الفورية
+  flutter_inappwebview: ^6.0.0
+  onesignal_flutter: ^5.2.2
+  url_launcher: ^6.2.5 # المكتبة المسؤولة عن فتح الواتساب والاتصال
 
 dev_dependencies:
   flutter_test:
