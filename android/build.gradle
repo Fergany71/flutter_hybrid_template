@@ -1,17 +1,16 @@
 buildscript {
-    // تحديث نسخة كوتلن لضمان التوافق مع المكتبات الجديدة
     ext.kotlin_version = '1.9.0' 
     repositories {
         google()
-        mavenCentral() // بديل أفضل وأسرع من jcenter
+        mavenCentral()
     }
 
     dependencies {
-        // تحديث Gradle ليتوافق مع أندرويد 14 و 15
+        // دعم Gradle الحديث المتوافق مع API 36
         classpath 'com.android.tools.build:gradle:7.3.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         
-        // إضافة سطر OneSignal لضمان وصول الإشعارات بدقة
+        // دعم خدمات جوجل للإشعارات
         classpath 'com.google.gms:google-services:4.3.15'
     }
 }
@@ -19,7 +18,7 @@ buildscript {
 allprojects {
     repositories {
         google()
-        mavenCentral() // jcenter مبقاش مدعوم كويس، mavenCentral أضمن
+        mavenCentral()
     }
 }
 
