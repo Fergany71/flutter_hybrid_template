@@ -14,6 +14,9 @@ def flutterVersionCode = localProperties.getProperty('flutter.versionCode') ?: '
 def flutterVersionName = localProperties.getProperty('flutter.versionName') ?: '1.0'
 
 android {
+    // إضافة الـ namespace المتوافق مع الإصدارات الحديثة
+    namespace "com.example.flutter_hybrid_template"
+    
     // تحديث الـ SDK لـ 36 (أندرويد 16)
     compileSdkVersion 36
 
@@ -32,8 +35,33 @@ android {
 
     defaultConfig {
         applicationId "com.example.flutter_hybrid_template"
+        
+        // دعم الأجهزة القديمة (Android 5+)
         minSdkVersion 21 
+        
+        // التوافق مع أحدث أنظمة التشغيل (API 36)
         targetSdkVersion 36
+        
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+        
+        multiDexEnabled true
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.debug
+            
+            // تحسينات الأداء وتقليل الحجم
+            minifyEnabled false
+            shrinkResources false
+        }
+    }
+}
+
+dependencies {
+    implementation 'androidx.multidex:multidex:2.0.1'
+}
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
