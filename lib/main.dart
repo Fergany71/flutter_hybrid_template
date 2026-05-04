@@ -7,18 +7,15 @@ import 'package:flutter/services.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // 1. شريط حالة متناغم (شفاف وأيقونات بيضاء)
+  // شريط حالة شفاف وأيقونات بيضاء
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.light,
-    systemNavigationBarColor: Colors.black,
-    systemNavigationBarIconBrightness: Brightness.light,
   ));
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   // إعداد الإشعارات
-  OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
   OneSignal.initialize("1d3faf09-9e8a-4975-b29f-cb0063b21568"); 
   OneSignal.Notifications.requestPermission(true);
 
@@ -34,6 +31,76 @@ class MyWebView extends StatefulWidget {
   State<MyWebView> createState() => _MyWebViewState();
 }
 
+class _MyWebViewState extends State<MyWebView> {
+  InAppWebViewController? webViewController;
+  double _progress = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black, // يمنع الوميض الأبيض تماماً
+      body: SafeArea(
+        child: WillPopScope(
+          onWillPop: () async {
+            if (webViewController != null && await webViewController!.canGoBack()) {
+              webViewController!.goBack();
+              return false;
+            }
+            return true;
+          },
+          child: Stack(
+            children: [
+              InAppWebView(
+                initialUrlRequest: URLRequest(
+                  url: WebUri("https://ahmedgamalplatform.omarelfergany9.workers.dev/"),
+                ),
+                initialSettings: InAppWebViewSettings(
+                  javaScriptEnabled: true,
+                  useHybridComposition: true,
+                  userAgent: "Omar_Super_App_2026",
+                  
+                  // --- أسرار السرعة والأمان القصوى ---
+                  cacheMode: CacheMode.LOAD_DEFAULT, // استخدام الكاش لسرعة الصاروخ
+                  supportZoom: false,
+                  allowsInlineMediaPlayback: true,
+                  disableContextMenu: true, // إخفاء قائمة "نسخ/لصق/فتح في المتصفح" نهائياً
+                  
+                  // تحسينات النيتف
+                  overScrollMode: OverScrollMode.NEVER,
+                  disallowOverScroll: true,
+                  selectionHighlightColor: Colors.transparent, // إخفاء تحديد النص
+                ),
+                onWebViewCreated: (controller) => webViewController = controller,
+                onProgressChanged: (controller, progress) {
+                  setState(() => _progress = progress / 100);
+                },
+                // منع فتح أي روابط خارجية داخل التطبيق إلا لو كانت واتساب/اتصال
+                shouldOverrideUrlLoading: (controller, navigationAction) async {
+                  var uri = navigationAction.request.url!;
+                  if (!["http", "https"].contains(uri.scheme)) {
+                    if (await canLaunchUrl(uri)) {
+                      await launchUrl(uri, mode: LaunchMode.externalApplication);
+                      return NavigationActionPolicy.CANCEL;
+                    }
+                  }
+                  return NavigationActionPolicy.ALLOW;
+                },
+              ),
+              
+              if (_progress < 1.0)
+                LinearProgressIndicator(
+                  value: _progress,
+                  color: const Color(0xFF00F2FF),
+                  backgroundColor: Colors.transparent,
+                  minHeight: 2,
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
 class _MyWebViewState extends State<MyWebView> {
   InAppWebViewController? webViewController;
   double _progress = 0; // متغير لمتابعة نسبة التحميل
