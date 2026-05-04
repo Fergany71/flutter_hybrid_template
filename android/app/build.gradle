@@ -1,3 +1,11 @@
+// 1. التعريف الحديث للإضافات (Declarative Plugins)
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    // السطر ده هو البديل لـ apply from القديم اللي كان بيعمل Error
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -21,12 +29,8 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
-
 android {
-    // التحديث لـ Android 16 (API 36)
+    // التحديث لـ Android 16 (المعيار المستقر في 2026)
     compileSdkVersion 36
 
     sourceSets {
@@ -39,13 +43,12 @@ android {
         // دعم الأجهزة القديمة (Android 5+)
         minSdkVersion 21 
         
-        // التوافق مع أحدث أنظمة التشغيل 2026
+        // التوافق مع أحدث أنظمة التشغيل (API 36)
         targetSdkVersion 36
         
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         
-        // تفعيل MultiDex لضمان استقرار التطبيق مع المكتبات الكثيرة
         multiDexEnabled true
     }
 
@@ -53,41 +56,17 @@ android {
         release {
             signingConfig signingConfigs.debug
             
-            // تحسينات الأداء للـ Release
+            // تحسينات الأداء وتقليل الحجم
             minifyEnabled false
             shrinkResources false
         }
     }
 }
 
-flutter {
-    source '../..'
-}
+// ملاحظة: في النظام الجديد، بلوك flutter { source '../../' } 
+// بيتم معالجته تلقائياً من خلال الـ Plugin اللي فوق
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.multidex:multidex:2.0.1'
-}
-        applicationId "com.example.flutter_hybrid_template"
-        minSdkVersion 16
-        targetSdkVersion 30
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
-    }
-
-    buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
-        }
-    }
-}
-
-flutter {
-    source '../..'
-}
-
-dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
