@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'package:url_launcher/url_launcher.dart'; // لفتح الواتساب والاتصال
+import 'package:url_launcher/url_launcher.dart'; 
 import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // تثبيت وضع الشاشة رأسي فقط
+  // 1. شريط حالة متناغم (شفاف وأيقونات بيضاء)
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    statusBarIconBrightness: Brightness.light,
+    systemNavigationBarColor: Colors.black,
+    systemNavigationBarIconBrightness: Brightness.light,
+  ));
+
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   // إعداد الإشعارات
@@ -29,11 +36,95 @@ class MyWebView extends StatefulWidget {
 
 class _MyWebViewState extends State<MyWebView> {
   InAppWebViewController? webViewController;
+  double _progress = 0; // متغير لمتابعة نسبة التحميل
 
   @override
   void initState() {
     super.initState();
-    // تفعيل مستمع الإشعارات لفتح صفحات معينة (Deep Linking)
+    setupNotificationListener();
+  }
+
+  void setupNotificationListener() {
+    OneSignal.Notifications.addClickListener((event) {
+      String? launchUrl = event.notification.launchUrl;
+      if (launchUrl != null && webViewController != null) {
+        webViewController!.loadUrl(
+          urlRequest: URLRequest(url: WebUri(launchUrl))
+        );
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: WillPopScope(
+          onWillPop: () async {
+            if (webViewController != null && await webViewController!.canGoBack()) {
+              webViewController!.goBack();
+              return false;
+            }
+            return true;
+          },
+          child: Stack( // استخدام Stack لوضع شريط التحميل فوق الموقع
+            children: [
+              InAppWebView(
+                initialUrlRequest: URLRequest(
+                  url: WebUri("https://ahmedgamalplatform.omarelfergany9.workers.dev/"),
+                ),
+                initialSettings: InAppWebViewSettings(
+                  javaScriptEnabled: true,
+                  allowsInlineMediaPlayback: true,
+                  useHybridComposition: true,
+                  
+                  // --- إضافة الـ User Agent الخاص بك (أمان عالي) ---
+                  userAgent: "Omar_Super_App_2026", 
+                  
+                  // تحسينات الواجهة لمنع الارتداد والزوم
+                  supportZoom: false,
+                  overScrollMode: OverScrollMode.NEVER,
+                  disallowOverScroll: true,
+                  builtInZoomControls: false,
+                  displayZoomControls: false,
+                ),
+                onWebViewCreated: (controller) {
+                  webViewController = controller;
+                },
+                // تحديث نسبة التحميل للشريط النيون
+                onProgressChanged: (controller, progress) {
+                  setState(() {
+                    _progress = progress / 100;
+                  });
+                },
+                shouldOverrideUrlLoading: (controller, navigationAction) async {
+                  var uri = navigationAction.request.url!;
+                  if (!["http", "https", "file", "chrome", "data", "javascript", "about"].contains(uri.scheme)) {
+                    if (await canLaunchUrl(uri)) {
+                      await launchUrl(uri, mode: LaunchMode.externalApplication);
+                      return NavigationActionPolicy.CANCEL;
+                    }
+                  }
+                  return NavigationActionPolicy.ALLOW;
+                },
+              ),
+              
+              // --- شريط التحميل النيون الاحترافي ---
+              if (_progress < 1.0)
+                LinearProgressIndicator(
+                  value: _progress,
+                  color: const Color(0xFF00F2FF), // لون نيون Cyan
+                  backgroundColor: Colors.transparent,
+                  minHeight: 2.5,
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
     setupNotificationListener();
   }
 
