@@ -28,15 +28,6 @@ class MainActivity: FlutterActivity() {
         Settings.Global.getInt(contentResolver, Settings.Global.ADB_ENABLED, 0) == 1
 
     private fun isDeviceRooted(): Boolean {
-        val paths = arrayOf("/system/app/Superuser.apk", "/sbin/su", "/system/bin/su", "/system/xbin/su", "/data/local/xbin/su", "/data/local/bin/su")
-        return paths.any { File(it).exists() }
-    }
-
-    private fun isEmulator(): Boolean {
-        return (Build.BRAND.startsWith("generic") || Build.DEVICE.startsWith("generic") || Build.MODEL.contains("google_sdk") || Build.MODEL.contains("Emulator") || Build.PRODUCT.contains("sdk"))
-    }
-}
-    private fun isDeviceRooted(): Boolean {
         val paths = arrayOf(
             "/system/app/Superuser.apk", "/sbin/su", "/system/bin/su",
             "/system/xbin/su", "/data/local/xbin/su", "/data/local/bin/su",
@@ -48,7 +39,7 @@ class MainActivity: FlutterActivity() {
         return false
     }
 
-    // دالة كشف المحاكيات (Emulators)
+    // دالة كشف المحاكيات (Emulators) الشاملة
     private fun isEmulator(): Boolean {
         return (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic")
                 || Build.FINGERPRINT.startsWith("generic")
