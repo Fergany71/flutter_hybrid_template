@@ -11,11 +11,24 @@ dependencies:
     sdk: flutter
   flutter_inappwebview: ^6.0.0
   onesignal_flutter: ^5.2.2
-  url_launcher: ^6.2.5 # المكتبة المسؤولة عن فتح الواتساب والاتصال
+  url_launcher: ^6.2.5 # لفتح الواتساب والاتصال
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  # المكتبة المسؤولة عن تحويل صورتك لأيقونة تطبيق
+  flutter_launcher_icons: "^0.13.1" 
 
 flutter:
   uses-material-design: true
+  # تعريف مجلد الصور عشان البرنامج يشوف اللوجو
+  assets:
+    - assets/icon.png
+
+# إعدادات الأيقونة (السحر هنا)
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon.png"
+  adaptive_icon_background: "#000000" # خلفية سوداء للأيقونة
+  adaptive_icon_foreground: "assets/icon.png" # اللوجو بتاعك
