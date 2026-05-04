@@ -1,17 +1,12 @@
 buildscript {
-    ext.kotlin_version = '1.9.0' 
+    ext.kotlin_version = '1.9.22' // نسخة مستقرة جداً لـ Java 17
     repositories {
         google()
         mavenCentral()
     }
-
     dependencies {
-        // دعم Gradle الحديث المتوافق مع API 36
         classpath 'com.android.tools.build:gradle:7.3.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        
-        // دعم خدمات جوجل للإشعارات
-        classpath 'com.google.gms:google-services:4.3.15'
     }
 }
 
