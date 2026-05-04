@@ -26,14 +26,48 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion 30
+    // التحديث لـ Android 16 (API 36)
+    compileSdkVersion 36
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+        applicationId "com.example.flutter_hybrid_template"
+        
+        // دعم الأجهزة القديمة (Android 5+)
+        minSdkVersion 21 
+        
+        // التوافق مع أحدث أنظمة التشغيل 2026
+        targetSdkVersion 36
+        
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+        
+        // تفعيل MultiDex لضمان استقرار التطبيق مع المكتبات الكثيرة
+        multiDexEnabled true
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.debug
+            
+            // تحسينات الأداء للـ Release
+            minifyEnabled false
+            shrinkResources false
+        }
+    }
+}
+
+flutter {
+    source '../..'
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.multidex:multidex:2.0.1'
+}
         applicationId "com.example.flutter_hybrid_template"
         minSdkVersion 16
         targetSdkVersion 30
